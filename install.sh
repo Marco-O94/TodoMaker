@@ -13,13 +13,21 @@ echo "==> Building (dist/cli.js, dist/mcp/server.js)"
 npm run build
 
 echo "==> Linking the 'todomaker' command globally"
-npm link
+if npm link; then
+  echo "Linked. Run: todomaker"
+else
+  # ponytail: npm link needs write access to the global prefix; if it fails,
+  # a shell alias is the zero-permission fallback.
+  echo "npm link failed (permissions?). Add this alias to your ~/.zshrc instead:"
+  echo "  alias todomaker=\"node $(pwd)/dist/cli.js\""
+fi
 
 cat <<'EOF'
 
-Done. Usage:
-  todomaker            # interactive TUI (the global command)
-  npm run dev          # TUI without linking (tsx)
+Usage:
+  todomaker            # interactive TUI (global command or alias)
+  npm start            # node dist/cli.js, without linking
+  npm run dev          # TUI from source (tsx, no build)
   npm run mcp          # MCP server over stdio
 
 Store: $TODOMAKER_STORE, else ~/.todomaker/store.json
