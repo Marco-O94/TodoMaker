@@ -1,0 +1,38 @@
+{
+  "name": "todomaker",
+  "version": "0.1.0",
+  "description": "Terminal todo manager (Ink TUI) with a companion MCP server, grouped by project.",
+  "type": "module",
+  "bin": {
+    "todomaker": "./dist/cli.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "tsx src/cli.tsx",
+    "mcp": "tsx src/mcp/server.ts",
+    "start": "node dist/cli.js",
+    "build": "tsup src/cli.tsx src/mcp/server.ts --format esm --clean",
+    "build:bin": "bun build src/cli.tsx --compile --outfile dist/todomaker && bun build src/mcp/server.ts --compile --outfile dist/todomaker-mcp",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test \"src/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "ink": "^7.1.0",
+    "ink-select-input": "^6.2.0",
+    "ink-spinner": "^5.0.0",
+    "ink-text-input": "^6.0.0",
+    "nanoid": "^5.1.16",
+    "react": "^19.2.7",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "@types/react": "^19.2.17",
+    "tsup": "^8.5.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}

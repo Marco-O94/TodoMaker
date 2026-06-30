@@ -1,0 +1,11 @@
+{
+  "name": "todomaker",
+  "owner": { "name": "TodoMaker" },
+  "plugins": [
+    {
+      "name": "todomaker",
+      "source": "./",
+      "description": "TodoMaker: check pending tasks for the current repo, add tasks/projects, with the MCP server auto-registered on install."
+    }
+  ]
+}

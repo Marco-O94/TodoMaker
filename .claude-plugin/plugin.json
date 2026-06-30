@@ -1,0 +1,15 @@
+{
+  "name": "todomaker",
+  "description": "Manage TodoMaker project todos from Claude Code: check pending tasks for the current repo, add tasks and projects. Bundles the TodoMaker MCP server (auto-registered on install) and a usage skill.",
+  "version": "0.1.0",
+  "author": { "name": "TodoMaker" },
+  "keywords": ["todo", "tasks", "productivity", "mcp"],
+  "commands": "./commands",
+  "skills": "./skills",
+  "mcpServers": {
+    "todomaker": {
+      "command": "${CLAUDE_PLUGIN_ROOT}/node_modules/.bin/tsx",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/src/mcp/server.ts"]
+    }
+  }
+}
