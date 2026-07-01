@@ -55,7 +55,10 @@ glyph/color of each status).
   title in a bordered box (enter advances). Step 2: the title is echoed, then a
   multi-line description editor. In the editor: **enter** = newline,
   **Ctrl-S** = save, **esc** = cancel. Esc cancels at every step (no accidental
-  save).
+  save). **Drag-and-drop** a `.md` file onto the terminal to import its contents
+  into the description (the terminal pastes the path; if it resolves to a real
+  markdown file the editor appends its text and shows `✓ imported <name>`).
+  Detection logic lives in `ui/dropImport.ts`.
 - **Project picker** — select an existing project or `＋ New project…`, which walks
   a name → path sub-flow (path defaults to the current working directory).
 
