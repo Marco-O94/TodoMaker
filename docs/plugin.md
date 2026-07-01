@@ -58,16 +58,19 @@ with uncommitted changes or local commits that diverge from the remote.
 
 ## Install
 
-Prerequisite: `npm install` in this repo (the MCP launch uses the local
-`node_modules/.bin/tsx`). The store path still honors `TODOMAKER_STORE`
-(else `~/.todomaker/store.json`).
-
-Add the repo as a marketplace, then install the plugin:
+Add the plugin straight from GitHub, then install it:
 
 ```bash
-/plugin marketplace add /abs/path/to/todo-cli
+/plugin marketplace add Marco-O94/TodoMaker
 /plugin install todomaker@todomaker
 ```
 
 Installing (and enabling) the plugin registers the MCP server automatically.
-Restart Claude Code if the `mcp__todomaker__*` tools do not appear immediately.
+
+Prerequisite: the MCP launch uses the plugin's local `node_modules/.bin/tsx`, so
+run `npm install` once inside the plugin directory (Claude Code prints its path on
+install) before the `mcp__todomaker__*` tools work. The store path still honors
+`TODOMAKER_STORE` (else `~/.todomaker/store.json`). Restart Claude Code if the
+tools do not appear immediately.
+
+A local clone works too: `/plugin marketplace add /abs/path/to/todo-cli`.

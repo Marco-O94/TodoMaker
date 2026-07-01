@@ -50,16 +50,18 @@ npm run build:bin   # -> dist/todomaker  and  dist/todomaker-mcp
 
 ## Use it from Claude Code (plugin)
 
-This repo is also a Claude Code plugin. Install it from your local clone — the
+This repo is also a Claude Code plugin. Add it straight from GitHub — the
 TodoMaker MCP server is registered automatically:
 
 ```bash
-/plugin marketplace add /abs/path/to/TodoMaker
+/plugin marketplace add Marco-O94/TodoMaker
 /plugin install todomaker@todomaker
 ```
 
-Then `/check-tasks` reports the pending tasks for the current repo. See
-[`docs/plugin.md`](docs/plugin.md).
+The MCP server runs from the plugin's own `node_modules`, so after installing run
+`npm install` once inside the plugin directory (Claude Code prints its path), then
+reload. Then `/check-tasks` reports the pending tasks for the current repo, and
+`/update` pulls newer versions. See [`docs/plugin.md`](docs/plugin.md).
 
 ## Documentation
 
