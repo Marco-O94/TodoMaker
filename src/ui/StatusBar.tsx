@@ -4,15 +4,15 @@ import { STATUS_STYLE } from "./theme.js";
 
 /** Key hints, grouped left→right roughly by frequency of use. */
 const KEYS: { key: string; label: string }[] = [
-  { key: "↑/↓", label: "move" },
+  { key: "j/k", label: "move" },
+  { key: "gg/G", label: "top/bottom" },
+  { key: "i", label: "edit" },
+  { key: "o", label: "add" },
+  { key: "dd", label: "delete" },
   { key: "space", label: "cycle" },
   { key: "1-4", label: "set" },
   { key: "x", label: "cancel" },
-  { key: "enter", label: "edit" },
-  { key: "a", label: "add" },
-  { key: "d", label: "delete" },
   { key: "f", label: "filter" },
-  { key: "g/G", label: "top/bottom" },
   { key: "p", label: "project" },
   { key: "r", label: "reload" },
   { key: "q", label: "quit" },

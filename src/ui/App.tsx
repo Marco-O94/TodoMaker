@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Box, Text, useApp, useInput, useStdout } from "ink";
 import {
   addTask,
@@ -106,13 +106,35 @@ export function App() {
   const clampedSelected = Math.min(selected, Math.max(0, view.length - 1));
   const current = view[clampedSelected];
 
+  // Holds the first key of a vim two-key sequence (g→gg, d→dd) until the next press.
+  const pendingKey = useRef<string | null>(null);
+
   useInput((input, key) => {
     if (screen !== "list") return;
+
+    // Resolve pending vim sequences first; a non-matching second key falls through.
+    const prev = pendingKey.current;
+    pendingKey.current = null;
+    if (prev === "g" && input === "g") return setSelected(0); // gg → top
+    if (prev === "d" && input === "d") {
+      // dd → delete
+      if (current) {
+        deleteTask(current.id);
+        refresh();
+      }
+      return;
+    }
+
     if (input === "q") return exit();
+    if (key.ctrl && key.upArrow) return setSelected(0); // Ctrl+↑ → top
+    if (key.ctrl && key.downArrow) return setSelected(Math.max(0, view.length - 1)); // Ctrl+↓ → bottom
     if (key.upArrow || input === "k") return setSelected(Math.max(0, clampedSelected - 1));
     if (key.downArrow || input === "j")
       return setSelected(Math.max(0, Math.min(view.length - 1, clampedSelected + 1)));
-    if (input === "g") return setSelected(0);
+    if (input === "g") {
+      pendingKey.current = "g";
+      return;
+    }
     if (input === "G") return setSelected(Math.max(0, view.length - 1));
     if (input === "f") {
       const i = FILTERS.indexOf(filter);
@@ -121,12 +143,16 @@ export function App() {
     }
     if (input === "r") return refresh();
     if (input === "p") return setScreen("projects");
-    if (input === "a") {
+    if (input === "a" || input === "o") {
       if (!currentProjectId) return setScreen("projects"); // need a project first
       setEditing(null);
       return setScreen("form");
     }
     if (!current) return;
+    if (input === "d") {
+      pendingKey.current = "d";
+      return;
+    }
     // 1..4 set the status directly (1 pending, 2 in_progress, 3 completed, 4 cancelled).
     const direct = TASK_STATUSES[Number(input) - 1];
     if (direct && input >= "1" && input <= "4") {
@@ -142,13 +168,9 @@ export function App() {
       setStatus(current.id, current.status === "cancelled" ? "pending" : "cancelled");
       return keepCursorOn(current.id, refresh());
     }
-    if (key.return) {
+    if (key.return || input === "i") {
       setEditing(current);
       return setScreen("form");
-    }
-    if (input === "d") {
-      deleteTask(current.id);
-      return refresh();
     }
   });
 

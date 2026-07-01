@@ -24,6 +24,10 @@ TodoMaker can be driven from Claude Code. It bundles three things:
   reports its **pending** tasks. If no project is registered for the repo it
   offers to register one.
 
+- **`/update` command** (`commands/update.md`) — runs `update.sh`: fetches the
+  git remote and, if a newer version exists, fast-forwards, reinstalls, and
+  rebuilds. Refuses to touch a dirty or diverged checkout.
+
 - **`todomaker` skill** (`skills/todomaker/SKILL.md`) — explains how to add
   tasks/projects, list/complete/cancel them, and which to view (pending). Loads
   when the user talks about managing todos.
@@ -35,8 +39,22 @@ TodoMaker can be driven from Claude Code. It bundles three things:
   plugin.json        # manifest + mcpServers (auto-registered on install)
   marketplace.json   # lets the repo be added as a plugin marketplace
 commands/check-tasks.md
+commands/update.md
 skills/todomaker/SKILL.md
+install.sh            # build + link the `todomaker` command
+update.sh            # fetch + fast-forward + reinstall + rebuild
 ```
+
+## Updating
+
+From Claude Code, run `/update`. Standalone, from the repo:
+
+```bash
+./update.sh
+```
+
+It fast-forwards from `origin/<branch>` only — it will not update a checkout
+with uncommitted changes or local commits that diverge from the remote.
 
 ## Install
 

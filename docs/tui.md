@@ -6,20 +6,24 @@ npm run dev        # tsx src/cli.tsx   (or: node dist/cli.js after build)
 
 ## Keybindings (list screen)
 
+Keybindings follow vim conventions where a natural equivalent exists.
+
 | Key            | Action                                                     |
 | -------------- | --------------------------------------------------------- |
-| `↑` / `↓`, `k` / `j` | move selection                                      |
-| `g` / `G`      | jump to top / bottom                                       |
+| `j` / `k`, `↓` / `↑` | move selection                                      |
+| `gg` / `G`, `Ctrl-↑` / `Ctrl-↓` | jump to top / bottom                    |
+| `i` / `enter`  | edit selected task                                        |
+| `o` / `a`      | add a task (title, then multi-line description)           |
+| `dd`           | delete selected task                                       |
 | `space`        | cycle status (pending → in_progress → completed → pending)|
 | `1` / `2` / `3` / `4` | set status directly (pending / in_progress / completed / cancelled) |
 | `x`            | toggle cancelled (cancelled ↔ pending)                    |
 | `f`            | cycle status filter (all → each status → all)             |
-| `enter`        | edit selected task                                        |
-| `a`            | add a task (title, then multi-line description)           |
-| `d`            | delete selected task                                      |
 | `p`            | switch / create project                                   |
 | `r`            | reload from disk (pick up external changes, e.g. via MCP) |
 | `q` / `Ctrl-C` | quit                                                      |
+
+`gg` and `dd` are two-key sequences: press the first key, then the second.
 
 Status glyphs: `[ ]` pending · `[~]` in progress · `[x]` completed · `[-]` cancelled.
 The `space` cycle covers pending → in_progress → completed; `cancelled` is set
