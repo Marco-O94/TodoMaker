@@ -25,10 +25,6 @@ TodoMaker can be driven from Claude Code. It bundles three things:
   is registered for the repo it offers to register one. It may also set `planMode`
   on a task it judges complex (via `update_task`).
 
-- **`/update` command** (`commands/update.md`) — runs `update.sh`: fetches the
-  git remote and, if a newer version exists, fast-forwards, reinstalls, and
-  rebuilds. Refuses to touch a dirty or diverged checkout.
-
 - **`todomaker` skill** (`skills/todomaker/SKILL.md`) — explains how to add
   tasks/projects, list/complete/cancel them, and which to view (pending). Loads
   when the user talks about managing todos.
@@ -40,22 +36,38 @@ TodoMaker can be driven from Claude Code. It bundles three things:
   plugin.json        # manifest + mcpServers (auto-registered on install)
   marketplace.json   # lets the repo be added as a plugin marketplace
 commands/check-tasks.md
-commands/update.md
 skills/todomaker/SKILL.md
 install.sh            # build + link the `todomaker` command
 update.sh            # fetch + fast-forward + reinstall + rebuild
+src/updater.ts       # TUI launch hook that runs update.sh in the background
 ```
 
 ## Updating
 
-From Claude Code, run `/update`. Standalone, from the repo:
+Updating is **automatic**. The TUI self-updates on launch: it spawns `update.sh`
+in the background (Claude Code style), so the app starts instantly and a
+fast-forward + rebuild lands on the **next** launch. `update.sh` fast-forwards
+from `origin/<branch>` only — it no-ops when already up to date and refuses a
+checkout with uncommitted changes or divergent local commits, so it never
+clobbers local work.
 
-```bash
-./update.sh
-```
+Safety: a `mkdir`-based lock (`.update.lock`) serializes updates so two launches
+never run `git`/`npm` concurrently, and the build backs up `dist/` and restores it
+if the rebuild fails — a launch never sees a half-written `dist/`.
 
-It fast-forwards from `origin/<branch>` only — it will not update a checkout
-with uncommitted changes or local commits that diverge from the remote.
+- Auto-update is **skipped under `npm run dev`** (running from source): a dev's
+  checkout is never silently fast-forwarded mid-session. The built/installed
+  command (`todomaker`, `npm start`) still self-updates.
+- Disable it entirely by setting `TODOMAKER_AUTO_UPDATE=0` (also `false`/`off`).
+- Update manually / on demand by running the script directly from the repo:
+
+  ```bash
+  ./update.sh
+  ```
+
+There is intentionally **no `/update` slash command** — the update has to run
+outside the program (it rebuilds the very code Claude Code is running), so it
+lives in the TUI launch and the standalone script, not as an in-chat command.
 
 ## Install
 

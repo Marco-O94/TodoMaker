@@ -30,7 +30,8 @@ src/
   mcp/
     tools.ts       tool registry (zod schemas + handlers) + error mapping
     server.ts      stdio wiring; registers every tool generically
-  cli.tsx          TUI entrypoint
+  updater.ts       TUI-launch background self-update (spawns update.sh)
+  cli.tsx          TUI entrypoint (kicks off the background update, then renders)
 ```
 
 ## Data model

@@ -60,8 +60,9 @@ TodoMaker MCP server is registered automatically:
 
 The MCP server runs from the plugin's own `node_modules`, so after installing run
 `npm install` once inside the plugin directory (Claude Code prints its path), then
-reload. Then `/check-tasks` reports the pending tasks for the current repo, and
-`/update` pulls newer versions. See [`docs/plugin.md`](docs/plugin.md).
+reload. Then `/check-tasks` reports the pending tasks for the current repo. The
+TUI self-updates in the background on launch (`TODOMAKER_AUTO_UPDATE=0` to
+disable). See [`docs/plugin.md`](docs/plugin.md).
 
 ## Documentation
 

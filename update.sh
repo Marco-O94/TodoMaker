@@ -4,6 +4,15 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# Serialize updates: an atomic mkdir lock so two launches never run git/npm
+# concurrently on this checkout. A stale lock only skips one run; the next clears it.
+LOCK_DIR=".update.lock"
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+  echo "Another update is in progress; skipping."
+  exit 0
+fi
+trap 'rmdir "$LOCK_DIR" 2>/dev/null || true' EXIT
+
 command -v git >/dev/null || { echo "git not found."; exit 1; }
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
   echo "Not a git checkout; cannot self-update."; exit 1;
@@ -35,6 +44,19 @@ fi
 
 echo "==> Installing dependencies"
 npm install --no-fund --no-audit --loglevel=error
+
+# Atomic-ish build: `tsup --clean` wipes dist/ before writing, so a failed or
+# interrupted build would leave a broken dist/. Back it up and restore on failure
+# so a launch never sees a half-written dist/.
 echo "==> Building"
-npm run build
+rm -rf dist.bak
+if [ -d dist ]; then cp -R dist dist.bak; fi
+if npm run build; then
+  rm -rf dist.bak
+else
+  echo "Build failed; restoring previous dist."
+  rm -rf dist
+  if [ -d dist.bak ]; then mv dist.bak dist; fi
+  exit 1
+fi
 echo "Updated to $(git rev-parse --short HEAD). Restart TodoMaker / reload the plugin."

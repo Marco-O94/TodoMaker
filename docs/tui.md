@@ -4,6 +4,11 @@
 npm run dev        # tsx src/cli.tsx   (or: node dist/cli.js after build)
 ```
 
+On launch the TUI kicks off a **silent background self-update** (`src/updater.ts`
+→ `update.sh`); the app starts immediately and any fast-forward + rebuild takes
+effect on the next launch. Set `TODOMAKER_AUTO_UPDATE=0` to disable it. See
+`docs/plugin.md` for details.
+
 ## Keybindings (list screen)
 
 Keybindings follow vim conventions where a natural equivalent exists.
