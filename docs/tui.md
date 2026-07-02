@@ -16,7 +16,7 @@ Keybindings follow vim conventions where a natural equivalent exists.
 | `o` / `a`      | add a task (title, then multi-line description)           |
 | `dd`           | delete selected task                                       |
 | `space`        | cycle status (pending → in_progress → completed → pending)|
-| `1` / `2` / `3` / `4` | set status directly (pending / in_progress / completed / cancelled) |
+| `1` / `2` / `3` / `4` / `5` | set status directly (pending / in_progress / completed / cancelled / blocked) |
 | `x`            | toggle cancelled (cancelled ↔ pending)                    |
 | `f`            | cycle status filter (all → each status → all)             |
 | `p`            | switch / create project                                   |
@@ -25,11 +25,17 @@ Keybindings follow vim conventions where a natural equivalent exists.
 
 `gg` and `dd` are two-key sequences: press the first key, then the second.
 
-Status glyphs: `[ ]` pending · `[~]` in progress · `[x]` completed · `[-]` cancelled.
-The `space` cycle covers pending → in_progress → completed; `cancelled` is set
-with `x` (or via edit), not part of the fast loop. Status display order
-(in_progress → pending → completed → cancelled) is single-sourced as
+Status glyphs: `[ ]` pending · `[~]` in progress · `[x]` completed · `[-]` cancelled ·
+`[!]` blocked. The `space` cycle covers pending → in_progress → completed;
+`cancelled` (`x` / key `4`) and `blocked` (key `5`) are deliberate states set
+directly, not part of the fast loop. Pressing `space` on a `cancelled` or
+`blocked` task drops it back to `pending` (they are off-cycle, so the cycle
+restarts). Status display order
+(in_progress → pending → blocked → completed → cancelled) is single-sourced as
 `STATUS_ORDER` in `schema.ts`.
+
+Plan-mode tasks are marked with a `◆` before the title in the list and a filled
+`PLAN` badge in the detail pane.
 
 ## Screens
 
@@ -50,10 +56,12 @@ with `x` (or via edit), not part of the fast loop. Status display order
 
 All colors come from `STATUS_STYLE` in `ui/theme.ts` (the single source for the
 glyph/color of each status).
-- **Task form** — a cyan-framed two-step flow with a filled heading badge
-  (`NEW TASK` / `EDIT TASK`) and a `step N of 2` indicator. Step 1: single-line
-  title in a bordered box (enter advances). Step 2: the title is echoed, then a
-  multi-line description editor. In the editor: **enter** = newline,
+- **Task form** — a cyan-framed three-step flow with a filled heading badge
+  (`NEW TASK` / `EDIT TASK`) and a `step N of 3` indicator. Step 1: single-line
+  title in a bordered box (enter advances). Step 2: a **plan-mode** toggle
+  (`space`/`y`/`n` flips `[ ]`↔`[x]`, enter advances) — when on, an agent must
+  enter plan mode before working the task. Step 3: the title (and plan-mode flag)
+  is echoed, then a multi-line description editor. In the editor: **enter** = newline,
   **Ctrl-S** = save, **esc** = cancel. Esc cancels at every step (no accidental
   save). **Drag-and-drop** a `.md` file onto the terminal to import its contents
   into the description (the terminal pastes the path; if it resolves to a real

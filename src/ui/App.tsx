@@ -153,9 +153,9 @@ export function App() {
       pendingKey.current = "d";
       return;
     }
-    // 1..4 set the status directly (1 pending, 2 in_progress, 3 completed, 4 cancelled).
+    // 1..5 set the status directly (1 pending, 2 in_progress, 3 completed, 4 cancelled, 5 blocked).
     const direct = TASK_STATUSES[Number(input) - 1];
-    if (direct && input >= "1" && input <= "4") {
+    if (direct && input >= "1" && input <= "5") {
       setStatus(current.id, direct);
       return keepCursorOn(current.id, refresh());
     }

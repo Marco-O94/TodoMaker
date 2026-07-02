@@ -70,6 +70,7 @@ export interface NewTask {
   title: string;
   description?: string;
   status?: TaskStatus;
+  planMode?: boolean;
 }
 
 export function addTask(input: NewTask): Task {
@@ -84,6 +85,7 @@ export function addTask(input: NewTask): Task {
       title: input.title,
       description: input.description ?? "",
       status: input.status ?? "pending",
+      planMode: input.planMode ?? false,
       createdAt: timestamp,
       updatedAt: timestamp,
     };
@@ -92,7 +94,7 @@ export function addTask(input: NewTask): Task {
   });
 }
 
-export type TaskPatch = Partial<Pick<Task, "title" | "description" | "status">>;
+export type TaskPatch = Partial<Pick<Task, "title" | "description" | "status" | "planMode">>;
 
 export function updateTask(id: string, patch: TaskPatch): Task {
   return mutate((store) => {
@@ -101,6 +103,7 @@ export function updateTask(id: string, patch: TaskPatch): Task {
     if (patch.title !== undefined) task.title = patch.title;
     if (patch.description !== undefined) task.description = patch.description;
     if (patch.status !== undefined) task.status = patch.status;
+    if (patch.planMode !== undefined) task.planMode = patch.planMode;
     task.updatedAt = now();
     return task;
   });

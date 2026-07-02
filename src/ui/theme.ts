@@ -6,4 +6,5 @@ export const STATUS_STYLE: Record<TaskStatus, { glyph: string; color: string; la
   in_progress: { glyph: "[~]", color: "cyan", label: "in progress" },
   completed: { glyph: "[x]", color: "green", label: "completed" },
   cancelled: { glyph: "[-]", color: "red", label: "cancelled" },
+  blocked: { glyph: "[!]", color: "magenta", label: "blocked" },
 };

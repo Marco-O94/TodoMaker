@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   addTask,
+  deleteTask,
   getProjectForCwd,
   getTask,
   listProjects,
@@ -41,7 +42,13 @@ const mapError = (err: unknown): ToolResult =>
 
 // Wire-shape projections — the single source of truth for what each tool exposes.
 const toProjectSummary = (p: Project) => ({ id: p.id, name: p.name, path: p.path });
-const toTaskSummary = (t: Task) => ({ id: t.id, title: t.title, status: t.status, updatedAt: t.updatedAt });
+const toTaskSummary = (t: Task) => ({
+  id: t.id,
+  title: t.title,
+  status: t.status,
+  planMode: t.planMode,
+  updatedAt: t.updatedAt,
+});
 
 const nonEmpty = z.string().trim().min(1);
 
@@ -139,6 +146,10 @@ export const tools: ToolDef[] = [
       projectId: z.string().optional(),
       cwd: z.string().optional(),
       status: TaskStatusSchema.optional(),
+      planMode: z
+        .boolean()
+        .optional()
+        .describe("Set true when the task is complex enough that an agent should plan before working it."),
     },
     handler: (args) => {
       const resolved = resolveProjectId(args);
@@ -150,6 +161,7 @@ export const tools: ToolDef[] = [
             title: args.title,
             description: args.description,
             status: args.status,
+            planMode: args.planMode,
           }),
         );
       } catch (err) {
@@ -184,16 +196,31 @@ export const tools: ToolDef[] = [
   },
   {
     name: "update_task",
-    description: "Update a task's title, description and/or status.",
+    description:
+      "Update a task's title, description, status and/or planMode. Set planMode=true when you judge the task complex enough to require entering plan mode before working it; false to clear.",
     inputSchema: {
       taskId: nonEmpty,
       title: nonEmpty.optional(),
       description: z.string().optional(),
       status: TaskStatusSchema.optional(),
+      planMode: z.boolean().optional(),
     },
-    handler: ({ taskId, title, description, status }) => {
+    handler: ({ taskId, title, description, status, planMode }) => {
       try {
-        return ok(updateTask(taskId, { title, description, status }));
+        return ok(updateTask(taskId, { title, description, status, planMode }));
+      } catch (err) {
+        return mapError(err);
+      }
+    },
+  },
+  {
+    name: "delete_task",
+    description: "Permanently delete a task by id.",
+    inputSchema: { taskId: nonEmpty },
+    handler: ({ taskId }) => {
+      try {
+        deleteTask(taskId);
+        return ok({ deleted: true, taskId });
       } catch (err) {
         return mapError(err);
       }

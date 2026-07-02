@@ -10,7 +10,7 @@ const KEYS: { key: string; label: string }[] = [
   { key: "o", label: "add" },
   { key: "dd", label: "delete" },
   { key: "space", label: "cycle" },
-  { key: "1-4", label: "set" },
+  { key: "1-5", label: "set" },
   { key: "x", label: "cancel" },
   { key: "f", label: "filter" },
   { key: "p", label: "project" },

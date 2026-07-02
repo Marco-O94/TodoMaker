@@ -66,6 +66,7 @@ export function TaskList({
                 wrap="truncate-end"
               >
                 {" "}
+                {task.planMode ? "◆ " : ""}
                 {task.title}{" "}
               </Text>
             </Text>

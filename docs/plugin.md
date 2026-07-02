@@ -21,8 +21,9 @@ TodoMaker can be driven from Claude Code. It bundles three things:
 
 - **`/check-tasks` command** (`commands/check-tasks.md`) — resolves the project
   for the current working directory (`pwd` is injected into the prompt), then
-  reports its **pending** tasks. If no project is registered for the repo it
-  offers to register one.
+  reports its **pending** tasks, marking plan-mode ones (`🧠 plan`). If no project
+  is registered for the repo it offers to register one. It may also set `planMode`
+  on a task it judges complex (via `update_task`).
 
 - **`/update` command** (`commands/update.md`) — runs `update.sh`: fetches the
   git remote and, if a newer version exists, fast-forwards, reinstalls, and

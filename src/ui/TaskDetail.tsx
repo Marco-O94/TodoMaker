@@ -39,6 +39,15 @@ export function TaskDetail({ task, maxLines }: { task: Task | null; maxLines: nu
           {" "}
           {style.glyph} {style.label}{" "}
         </Text>
+        {task.planMode ? (
+          <Text>
+            {" "}
+            <Text backgroundColor="magenta" color="black" bold>
+              {" "}
+              PLAN{" "}
+            </Text>
+          </Text>
+        ) : null}
         <Text dimColor>  updated {ago(task.updatedAt)}</Text>
       </Text>
       <Box marginTop={1}>

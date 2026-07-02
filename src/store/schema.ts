@@ -5,7 +5,7 @@ import { z } from "zod";
  * server import these types/schemas — never redefine them elsewhere.
  */
 
-export const TASK_STATUSES = ["pending", "in_progress", "completed", "cancelled"] as const;
+export const TASK_STATUSES = ["pending", "in_progress", "completed", "cancelled", "blocked"] as const;
 export const TaskStatusSchema = z.enum(TASK_STATUSES);
 export type TaskStatus = z.infer<typeof TaskStatusSchema>;
 
@@ -15,6 +15,8 @@ export const TaskSchema = z.object({
   title: z.string(),
   description: z.string().default(""),
   status: TaskStatusSchema,
+  /** When true, an agent must enter plan mode before working this task. */
+  planMode: z.boolean().default(false),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -48,7 +50,7 @@ export const STATUS_CYCLE: TaskStatus[] = ["pending", "in_progress", "completed"
  * first, finished/abandoned last. Single source — the TUI must not reorder
  * statuses anywhere else.
  */
-export const STATUS_ORDER: TaskStatus[] = ["in_progress", "pending", "completed", "cancelled"];
+export const STATUS_ORDER: TaskStatus[] = ["in_progress", "pending", "blocked", "completed", "cancelled"];
 
 export function nextStatus(current: TaskStatus): TaskStatus {
   const i = STATUS_CYCLE.indexOf(current);

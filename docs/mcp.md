@@ -19,15 +19,21 @@ transport on stdout is never corrupted.
 | -------------------- | ---------------------------------------------------- | ------- |
 | `list_projects`      | —                                                    | `{id,name,path}[]` |
 | `get_current_project`| `{ cwd }`                                            | matched project or `{matched:false}` |
-| `list_tasks`         | `{ projectId? , cwd? , status? }`                    | task summaries (no description) |
+| `list_tasks`         | `{ projectId? , cwd? , status? }`                    | task summaries (incl. `planMode`, no description) |
 | `get_task`           | `{ taskId }`                                         | full task incl. description |
-| `create_task`        | `{ title, description?, projectId?, cwd?, status? }` | created task |
+| `create_task`        | `{ title, description?, projectId?, cwd?, status?, planMode? }` | created task |
 | `register_project`   | `{ name, path }`                                     | upserted project |
 | `update_task_status` | `{ taskId, status }`                                 | updated task |
-| `update_task`        | `{ taskId, title?, description?, status? }`          | updated task |
+| `update_task`        | `{ taskId, title?, description?, status?, planMode? }` | updated task |
+| `delete_task`        | `{ taskId }`                                         | `{ deleted: true, taskId }` |
 
-`status` ∈ `pending | in_progress | completed | cancelled`. Required text inputs
-(`title`, `name`, `path`) reject empty/whitespace-only values via zod.
+`status` ∈ `pending | in_progress | completed | cancelled | blocked`. Required
+text inputs (`title`, `name`, `path`) reject empty/whitespace-only values via zod.
+
+`planMode` (boolean) declares that an agent should enter plan mode before working
+the task. An agent may set it via `create_task` / `update_task` when it judges a
+task complex; it is returned in every `list_tasks` summary so the flag is visible
+without a full `get_task`.
 
 ## Project resolution
 

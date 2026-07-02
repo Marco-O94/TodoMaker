@@ -22,7 +22,7 @@ src/
   ui/
     App.tsx        top-level state, key handling, screen routing
     TaskList.tsx   navigable list with status glyphs
-    TaskForm.tsx   add/edit: title + multi-line description
+    TaskForm.tsx   add/edit: title + plan-mode toggle + multi-line description
     MultiLineInput.tsx  in-process multi-line editor
     ProjectPicker.tsx   switch / create project
     StatusBar.tsx  footer keybinding hints
@@ -36,7 +36,7 @@ src/
 ## Data model
 
 ```ts
-type TaskStatus = "pending" | "in_progress" | "completed" | "cancelled";
+type TaskStatus = "pending" | "in_progress" | "completed" | "cancelled" | "blocked";
 
 interface Task {
   id: string;          // nanoid
@@ -44,6 +44,7 @@ interface Task {
   title: string;
   description: string; // long-form, may be multi-line markdown
   status: TaskStatus;
+  planMode: boolean;   // when true, an agent must plan before working the task
   createdAt: string;   // ISO
   updatedAt: string;   // ISO
 }

@@ -1,6 +1,6 @@
 ---
 description: Check TodoMaker pending tasks for the current repo
-allowed-tools: Bash(pwd), mcp__todomaker__get_current_project, mcp__todomaker__list_tasks, mcp__todomaker__register_project
+allowed-tools: Bash(pwd), mcp__todomaker__get_current_project, mcp__todomaker__list_tasks, mcp__todomaker__register_project, mcp__todomaker__update_task
 ---
 
 Current working directory: !`pwd`
@@ -18,7 +18,15 @@ the working directory shown above. Use that absolute path as `cwd`.
 4. Report concisely:
    - the project name and path,
    - the number of pending tasks,
-   - each pending task's title as a checklist (`- [ ] <title>`).
+   - each pending task's title as a checklist (`- [ ] <title>`). Append `🧠 plan`
+     to any task whose `planMode` is true (the `list_tasks` summary includes it).
    If there are none, say the project is all clear (no pending tasks).
+
+Plan mode:
+- When the user starts a task whose `planMode` is true, **enter plan mode first**
+  — research, present a plan, wait for approval before editing.
+- If a task looks complex enough to deserve a plan but is not flagged, you may set
+  it with `mcp__todomaker__update_task { taskId, planMode: true }` (or `false` to
+  clear). Do not flag trivial tasks.
 
 Do not invent tasks or projects. Only report what the tools return.
